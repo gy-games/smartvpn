@@ -1,0 +1,38 @@
+#!/bin/bash
+#dir=$PWD
+#cd ..
+#PATH=$PWD/bin:$PATH
+#export PATH
+
+start(){
+    /usr/local/openvpn/sbin/openvpn --config /etc/openvpn/client.conf --daemon
+    #pid=`ps -ef | grep openvpn | grep -v grep | awk '{print $2}'`
+    args=`echo $?`
+    sleep 3
+    if [ $args == 0 ] ; then
+        echo 'smartvpn start [success]'
+    else
+        echo 'smartvpn start [failure]'
+    fi
+}
+stop(){
+    pid=`ps -ef | grep openvpn | grep -v grep | awk '{print $2}'`
+    kill -9 $pid >/dev/null 2>&1 &
+    args=`echo $?`
+    if [ $args == 0 ] ; then
+        echo 'smartvpn stop [success]'
+    fi
+}
+
+case "$1" in
+    start)
+        start
+        ;;
+    stop)
+        stop
+        ;;
+*)
+    echo "Usage: $0 {start|stop}"
+    ;;
+esac
+
